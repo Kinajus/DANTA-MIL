@@ -1,0 +1,38 @@
+name: camelyon16_danta
+task: classification
+
+data:
+  manifest: data/manifests/camelyon16.csv
+  root: .
+  id_column: slide_id
+  patient_id_column: patient_id
+  feature_column: feature_path
+  label_column: label
+
+split:
+  validation_ids_file: split/CAMELYON16/diagnosis/repeat_{repeat}/fold_{fold}.csv
+  split_id_column: ID
+  fold: 0
+  repeat: 0
+  n_splits: 3
+
+model:
+  input_dim: 512       # PLIP or CONCH; use 1024 for ResNet-50 or UNI
+  latent_dim: 512
+  n_classes: 2
+  requested_neighbors: 6
+  dropout: 0.25
+
+train:
+  seed: 2026
+  epochs: 200
+  early_stopping_patience: 30
+  batch_size: 1
+  num_workers: 0
+  lr: 0.0002
+  weight_decay: 0.00001
+  optimizer: Adam
+  scheduler: cosine
+  amp: false
+  best_metric: auc
+  output_dir: runs

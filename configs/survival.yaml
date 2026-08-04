@@ -1,0 +1,39 @@
+name: tcga_lusc_survival_danta
+task: survival
+
+data:
+  manifest: data/manifests/tcga_lusc_survival.csv
+  root: .
+  id_column: slide_id
+  patient_id_column: patient_id
+  feature_column: feature_path
+  event_time_column: event_time
+  event_observed_column: event_observed
+  survival_bin_column: survival_bin
+
+split:
+  validation_ids_file: split/TCGA_LUSC/overall_survival/fold_{fold}.csv
+  split_id_column: ID
+  fold: 0
+  n_splits: 5
+
+model:
+  input_dim: 1024
+  latent_dim: 512
+  num_intervals: 4
+  requested_neighbors: 6
+  dropout: 0.25
+
+train:
+  seed: 2026
+  epochs: 200
+  early_stopping_patience: 20
+  batch_size: 1
+  num_workers: 0
+  lr: 0.0002
+  weight_decay: 0.00001
+  optimizer: Adam
+  scheduler: cosine
+  amp: false
+  best_metric: c_index
+  output_dir: runs

@@ -1,0 +1,38 @@
+name: tcga_brca_danta
+task: classification
+
+data:
+  manifest: data/manifests/tcga_brca.csv
+  root: .
+  id_column: slide_id
+  patient_id_column: patient_id
+  feature_column: feature_path
+  label_column: label
+
+split:
+  validation_ids_file: split/TCGA_BRCA/subtyping_IDC_vs_ILC/fold_{fold}.csv
+  split_id_column: ID
+  fold: 0
+  n_splits: 5
+
+model:
+  # ResNet-50: 1024; PLIP: 512; UNI: 1024; CONCH: 512
+  input_dim: 1024
+  latent_dim: 512
+  n_classes: 2
+  requested_neighbors: 6
+  dropout: 0.25
+
+train:
+  seed: 2026
+  epochs: 200
+  early_stopping_patience: 20
+  batch_size: 1
+  num_workers: 0
+  lr: 0.0002
+  weight_decay: 0.00001
+  optimizer: Adam
+  scheduler: cosine
+  amp: false
+  best_metric: auc
+  output_dir: runs
